@@ -1,0 +1,186 @@
+# visual_dashboard.py
+
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objs as go
+import gradio as gr
+
+# =======================
+# --- DATA MANAGEMENT ---
+# =======================
+
+STARTUP_DATA = [
+    # name, sector, ARR (M USD), growth_rate %, valuation (M USD), stage, financial_health
+    ['Scale AI', 'Inteligencia Artificial', 680, 97, 14000, 'Crecimiento', 'Excelente'],
+    ['Ora AI', 'Inteligencia Artificial', 1.2, 130, 16, 'Semilla', 'Prometedora'],
+    ['Skild AI', 'Inteligencia Artificial', 32, 90, 4500, 'Crecimiento', 'Muy Buena'],
+    ['Astro', 'Energía Limpia', 10.5, 85, 270, 'Desarrollo', 'Buena'],
+    ['Cloover', 'Energía Limpia', 7.2, 75, 180, 'Desarrollo', 'Prometedora'],
+    ['Pogo', 'Energía Limpia', 4.8, 70, 85, 'Semilla', 'En Crecimiento'],
+    ['Blockaid', 'Blockchain', 12.1, 77, 310, 'Desarrollo', 'Sólida'],
+    ['Govly', 'Blockchain', 1.7, 120, 20, 'Semilla', 'A Supervisar'],
+]
+
+df = pd.DataFrame(STARTUP_DATA, columns=[
+    "Nombre", "Sector", "ARR (M USD)", "Crecimiento (%)", "Valoración (M USD)", "Etapa", "Salud Financiera"
+])
+
+sector_palette = {
+    "Inteligencia Artificial": "#1f77b4",
+    "Energía Limpia": "#2ca02c",
+    "Blockchain": "#d62728"
+}
+
+# =======================
+# --- GRAPH FUNCTIONS ---
+# =======================
+
+def plot_roi_vs_growth():
+    fig = px.scatter(
+        df, x="Crecimiento (%)", y="ARR (M USD)", color="Sector",
+        size="Valoración (M USD)", hover_name="Nombre",
+        color_discrete_map=sector_palette,
+        title="Crecimiento (%) vs ARR (millones USD)",
+        labels={"Crecimiento (%)":"Tasa de Crecimiento (%)", "ARR (M USD)":"ARR (M USD)"}
+    )
+    fig.update_layout(height=450, margin={"t":50,"b":30,"l":20,"r":10})
+    return fig
+
+def plot_sector_distribution():
+    count_by_sector = df.groupby("Sector").size().reset_index(name="Cantidad")
+    fig = px.pie(
+        count_by_sector, names="Sector", values="Cantidad",
+        color="Sector", color_discrete_map=sector_palette,
+        title="Distribución de Startups por Sector"
+    )
+    fig.update_traces(textinfo='label+percent')
+    return fig
+
+def plot_top_growth_bar():
+    fig = px.bar(
+        df.sort_values("Crecimiento (%)",ascending=False),
+        x="Nombre", y="Crecimiento (%)", color="Sector",
+        color_discrete_map=sector_palette,
+        title="Ranking: Startups por tasa de crecimiento (%)"
+    )
+    fig.update_layout(xaxis_title="", yaxis_title="Crecimiento (%)", height=400, margin=dict(b=40))
+    return fig
+
+def plot_valuation_treemap():
+    fig = px.treemap(
+        df, path=["Sector", "Nombre"],
+        values="Valoración (M USD)", color="Sector",
+        color_discrete_map=sector_palette,
+        title="Valoración de Startups por Sector"
+    )
+    return fig
+
+def filter_by_sector(sector):
+    if sector == "Todas":
+        return df
+    else:
+        return df[df["Sector"] == sector]
+
+def table_by_health():
+    health_order = ["Excelente", "Muy Buena", "Sólida", "Buena", "Prometedora", "En Crecimiento", "A Supervisar"]
+    sorted_df = df.copy()
+    sorted_df["_SaludOrden_"] = sorted_df["Salud Financiera"].apply(lambda x: health_order.index(x) if x in health_order else 99)
+    sorted_df = sorted_df.sort_values(["_SaludOrden_", "Crecimiento (%)"], ascending=[True, False]).drop("_SaludOrden_", axis=1)
+    display_cols = ["Nombre","Sector","Salud Financiera","Etapa","ARR (M USD)","Crecimiento (%)","Valoración (M USD)"]
+    return sorted_df[display_cols].reset_index(drop=True)
+
+# =======================
+# --- INTERACTIVE LOGIC --
+# =======================
+
+def visualizaciones_interactivas(sector):
+    filtered = filter_by_sector(sector)
+    # ROI vs CRECIMIENTO
+    fig1 = px.scatter(
+        filtered, x="Crecimiento (%)", y="ARR (M USD)", color="Sector",
+        size="Valoración (M USD)", hover_name="Nombre",
+        color_discrete_map=sector_palette,
+        title="Crecimiento (%) vs ARR (millones USD)",
+        labels={"Crecimiento (%)":"Tasa de Crecimiento (%)", "ARR (M USD)":"ARR (M USD)"}
+    )
+    fig1.update_layout(height=420, margin={"t":40,"b":20,"l":12,"r":6})
+
+    # Tabla comparativa sector
+    if not filtered.empty:
+        t_sector = filtered[["Nombre","Etapa","ARR (M USD)","Crecimiento (%)","Valoración (M USD)","Salud Financiera"]].reset_index(drop=True)
+    else:
+        t_sector = pd.DataFrame(columns=["Nombre","Etapa","ARR (M USD)","Crecimiento (%)","Valoración (M USD)","Salud Financiera"])
+
+    # Gráfico sectores (para Todas)
+    if sector=="Todas":
+        fig_sector = plot_sector_distribution()
+    else:
+        fig_sector = px.histogram(
+            filtered, x="Etapa", color="Salud Financiera", barmode='group',
+            title=f"Distribución de Etapas en Startups - {sector}"
+        )
+        fig_sector.update_layout(height=320)
+
+    return fig1, t_sector, fig_sector
+
+# =======================
+# ------- GRADIO --------
+# =======================
+
+with gr.Blocks(title="Dashboard de Inversión: Startups Estratégicas", theme=gr.themes.Base(primary_hue="green")) as demo:
+    gr.Markdown("""
+    # 📈 Dashboard de Recomendaciones de Inversión Estratégicas
+    Visualice el análisis de startups innovadoras en Inteligencia Artificial, Energías Limpias y Blockchain.
+    """)
+    with gr.Row():
+        with gr.Column(scale=3):
+            gr.Markdown("## Seleccione un sector para análisis segmentado")
+            sector_sel = gr.Dropdown(
+                choices=["Todas"] + sorted(df["Sector"].unique().tolist()),
+                value="Todas", label="Filtrar por Sector"
+            )
+            gr.Markdown(
+                "<small>La tabla y los gráficos cambiarán dependiendo del sector seleccionado. Use 'Todas' para visión total.</small>",
+                elem_id="info-text"
+            )
+        with gr.Column():
+            gr.Plot(plot_sector_distribution, label="Distribución Startups por Sector")
+
+    with gr.Tab("Gráficos Interactivos"):
+        with gr.Row():
+            plot_out = gr.Plot(label="ROI vs Crecimiento (%)")
+        with gr.Row():
+            sector_plot = gr.Plot(label="Visualización por Sector dividido")
+        gr.Markdown("### Tabla Comparativa de Startups (por sector)")
+        data_table = gr.Dataframe(
+            label="Startups del Sector Seleccionado",
+            headers=["Nombre","Etapa","ARR (M USD)","Crecimiento (%)","Valoración (M USD)","Salud Financiera"], 
+            datatype=["str","str","number","number","number","str"]
+        )
+
+    with gr.Tab("Ranking de Crecimiento"):
+        gr.Plot(plot_top_growth_bar)
+        gr.Markdown("Top startups ordenadas por su tasa de crecimiento anual.")
+
+    with gr.Tab("Mapa de Valoraciones"):
+        gr.Plot(plot_valuation_treemap)
+        gr.Markdown("Visualice la proporcionalidad de la valoración de cada startup por sector.")
+
+    with gr.Tab("Comparativa de Salud Financiera"):
+        gr.Markdown("Startups ordenadas según su nivel de salud financiera y crecimiento.")
+        gr.Dataframe(table_by_health, label="Comparativa por Salud Financiera")
+
+    # Interacción principal
+    sector_sel.change(
+        visualizaciones_interactivas, 
+        inputs=[sector_sel], 
+        outputs=[plot_out, data_table, sector_plot]
+    )
+    
+    gr.Markdown("""
+    ---
+    _Visualización de datos para decisiones de inversión informadas ⚡_
+    """)
+
+if __name__ == "__main__":
+    demo.launch()

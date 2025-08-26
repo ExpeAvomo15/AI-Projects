@@ -1,0 +1,58 @@
+analyze_market_trends:
+  description: >
+    Analiza las tendencias actuales del mercado en {sector} y identifica áreas de alto crecimiento potencial
+  expected_output: >
+    Reporte de tendencias de mercado con sectores prometedores y oportunidades emergentes
+  agent: market_analyzer
+  output_file: output/market_analysis.json
+
+find_promising_startups:
+  description: >
+    Busca las 10 startups innovadoras en los sectores identificados, considerando {investment_criteria}
+  expected_output: >
+    Lista de startups prometedoras con información básica y potencial identificado
+  agent: startup_scout
+  context:
+    - analyze_market_trends
+  output_file: output/startup_discovery.json
+
+analyze_financial_health:
+  description: >
+    Evalúa la salud financiera y el potencial de crecimiento de las startups identificadas
+  expected_output: >
+    Análisis financiero detallado con proyecciones y valuation estimada
+  agent: financial_analyst
+  context:
+    - find_promising_startups
+  output_file: output/financial_analysis.json
+
+generate_investment_recommendations:
+  description: >
+    Desarrolla recomendaciones de inversión estratégicas basadas en el análisis completo y {investment_thesis}
+  expected_output: >
+    Reporte de recomendaciones de inversión con racional detallado y estrategia propuesta
+  agent: investment_strategist
+  context:
+    - analyze_market_trends
+    - find_promising_startups
+    - analyze_financial_health
+  output_file: output/investment_recommendations.md
+
+generate_visual_dashboard:
+  description: >
+    CREAR UN ARCHIVO PYTHON EJECUTABLE con una aplicación Gradio interactiva.
+    
+    NO generar JSON. SOLO código Python ejecutable.
+  expected_output: >
+    Archivo Python (.py) completamente funcional con aplicación Gradio que incluye:
+    - Gráficos interactivos de ROI y crecimiento
+    - Tablas comparativas de startups
+    - Visualización por sectores
+    - Interfaz web interactiva
+    - Tabal Comparativa de las Startups en funcion de su Salud Financiera
+    El archivo debe ser ejecutable directamente con python visual_dashboard.py
+  agent: visualization_agent
+  context:
+    - generate_investment_recommendations
+  output_file: output/visual_dashboard.py
+  
