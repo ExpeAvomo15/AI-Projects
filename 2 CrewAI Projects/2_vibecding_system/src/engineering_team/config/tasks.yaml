@@ -1,0 +1,49 @@
+design_task:
+  description: >
+    Take the high level requirements described here and prepare a detailed design for the engineer;
+    everything should be in 1 python module, but outline the classes and methods in the module.
+    Here are the requirements: {requirements}
+    IMPORTANT: Only output the design in markdown format, laying out in detail the classes and functions in the module, describing the functionality.
+  expected_output: >
+    A detailed design document in markdown format.
+  agent: engineering_lead
+  output_file: output/{module_name}_design.md
+
+code_task:
+  description: >
+    Write a complete python module named {module_name}.py that implements the design to achieve these requirements: {requirements}
+    The module must contain a class named {class_name} with all necessary methods.
+    IMPORTANT: Output ONLY raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output must be valid Python code that can be directly saved to a file and executed.
+  expected_output: >
+    A complete Python module file with the class {class_name} and all required methods.
+  agent: backend_engineer
+  context:
+    - design_task
+  output_file: output/{module_name}.py
+
+frontend_task:
+  description: >
+    Write a complete gradio UI in app.py that demonstrates the backend class {class_name} from {module_name}.py.
+    The UI should be simple and functional with appropriate input and output components.
+    IMPORTANT: Output ONLY raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output must be valid Python code that can be directly saved to app.py and executed.
+  expected_output: >
+    A complete app.py file with gradio interface that imports and uses {class_name} from {module_name}.py.
+  agent: frontend_engineer
+  context:
+    - code_task
+  output_file: output/app.py
+
+test_task:
+  description: >
+    Write comprehensive unit tests in test_{module_name}.py for the backend module {module_name}.py.
+    Test all methods of the {class_name} class with appropriate test cases.
+    IMPORTANT: Output ONLY raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output must be valid Python code that can be directly saved to test_{module_name}.py and executed with pytest.
+  expected_output: >
+    A complete test_{module_name}.py file with unit tests for all methods of the {class_name} class.
+  agent: test_engineer
+  context:
+    - code_task
+  output_file: output/test_{module_name}.py
