@@ -1,0 +1,55 @@
+detect_security_threats:
+  description: >
+    Identify emerging cybersecurity threats targeting {company} in {sector} by searching Google using SerperDevTool to monitor security news, threat feeds, and intelligence sources.
+    Focus on {threat_category} threats that could impact {company}. Ensure you find new threats that haven't been analyzed previously.
+    Use web search to get the most current threat information from security blogs, news sites, and threat intelligence platforms relevant to {company}.
+  expected_output: >
+    A list of identified cybersecurity threats with basic classification and severity assessment based on current web intelligence specific to {company}
+  agent: threat_detector
+  output_file: output/identified_threats.json
+
+analyze_threats:
+  description: >
+    Conduct in-depth technical analysis of each identified threat targeting {company} by searching Google using SerperDevTool for detailed technical information.
+    Research attack vectors, IOCs, technical details, and potential attack methodology from security forums, technical blogs, and threat reports relevant to {company}.
+    Provide comprehensive technical assessment for {company}'s defense planning using current threat intelligence.
+  expected_output: >
+    Detailed technical analysis report for each threat including IOCs and attack vectors based on latest web research for {company}
+  agent: security_analyst
+  context:
+    - detect_security_threats
+  output_file: output/threat_analysis.json
+
+assess_critical_threats:
+  description: >
+    Evaluate the risk level of each analyzed threat specifically for {company} by searching Google using SerperDevTool for recent impact reports, mitigation strategies, and real-world incidents affecting similar companies.
+    Prioritize based on severity and potential impact on {company} using current threat intelligence, and provide actionable mitigation strategies and security control recommendations tailored for {company}.
+    Research current best practices and recent successful defense strategies from security publications applicable to {company}.
+  expected_output: >
+    Prioritized threat assessment with mitigation recommendations and risk ratings based on current threat intelligence for {company}
+  agent: threat_assessor
+  context:
+    - analyze_threats
+  output_file: output/risk_assessment.md
+
+create_security_dashboard:
+  description: >
+    GENERATE A PROFESSIONAL TEXT-BASED SECURITY REPORT using REAL threat data from previous analysis.
+    
+    CRITICAL REQUIREMENTS:
+    - Use ONLY REAL data from threat_analysis.json - NO example data
+    - Create a WELL-FORMATTED HTML report with clean visual presentation
+    - Include: Executive Summary, Threat Overview, Severity Analysis, Mitigation Status, Recommendations
+    - Use proper headings, bullet points, and organized sections
+    - Make it VISUALLY APPEALING with CSS styling but SIMPLE
+    - NO complex graphics or charts - focus on text presentation
+    - Ensure good readability and professional appearance
+    
+    OUTPUT ONLY clean HTML code with inline CSS for maximum compatibility.
+    The report should be ready to open in any web browser.
+  expected_output: >
+    A professional HTML security report with clean formatting and organized threat information
+  agent: visualization_engineer
+  context:
+    - assess_critical_threats
+  output_file: output/security_report.html
