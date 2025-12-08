@@ -199,6 +199,12 @@ export ONNX_OPSET="14"                    # ONNX opset version
 
 ## 📄 License & Attribution
 
+### Author
+**Expe Avomo** - AI Engineer & Entrepreneur
+
+### Copyright
+© 2023 Avomo Innovations LLC. All rights reserved.
+
 ### Demo Version
 This is a **demonstration version** of TurbineAI Engine, showcasing real pruning and quantization techniques. For production use or extended capabilities, please contact the development team.
 
@@ -212,6 +218,16 @@ This is a **demonstration version** of TurbineAI Engine, showcasing real pruning
 - **Optimization Algorithms**: Real pruning and quantization implementations
 - **UI/UX**: Intuitive Gradio interface
 - **Testing**: Comprehensive model compatibility validation
+
+## 📞 Support & Contact
+
+### Getting Help
+- **Documentation**: Review this README and code comments
+- **Issues**: Check for known issues in the codebase
+- **Community**: Join discussion forums (if available)
+
+### Feedback
+This demo version is continuously improved based on user feedback. For suggestions, feature requests, or bug reports, please contact the development team.
 
 ## 🔮 Future Enhancements
 
@@ -229,18 +245,13 @@ This is a **demonstration version** of TurbineAI Engine, showcasing real pruning
 4. **Phase 4**: Cloud deployment automation
 5. **Phase 5**: Enterprise features and scalability
 
-## 📞 Support & Contact
-
-### Getting Help
-- **Documentation**: Review this README and code comments
-- **Issues**: Check for known issues in the codebase
-- **Community**: Join discussion forums (if available)
-
-### Feedback
-This demo version is continuously improved based on user feedback. For suggestions, feature requests, or bug reports, please contact the development team.
-
 ---
 
 **⚡ TurbineAI Engine - Transforming Model Optimization**  
 *Demo Version | For Evaluation Purposes*  
-*Optimization completed with real parameter reduction and precise metrics*
+*Optimization completed with real parameter reduction and precise metrics*  
+
+**Author**: Expe Avomo - AI Engineer & Entrepreneur  
+**Copyright**: © 2023 Avomo Innovations LLC. All rights reserved.
+
+*This demo version is proprietary technology. All optimization algorithms, pruning techniques, and quantization methods are intellectual property of Avomo Innovations LLC.*
