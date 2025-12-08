@@ -222,7 +222,7 @@ This is a **demonstration version** of TurbineAI Engine, showcasing real pruning
 ## 📞 Support & Contact
 
 ### Getting Help
--**contact**: infoavomo@gmail.com
+- **Contact**: infoavomo@gmail.com
 - **Documentation**: Review this README and code comments
 - **Issues**: Check for known issues in the codebase
 - **Community**: Join discussion forums (if available)
@@ -256,5 +256,6 @@ This demo version is continuously improved based on user feedback. For suggestio
 **Copyright**: © 2025 Avomo Innovations LLC. All rights reserved.
 
 *This demo version is proprietary technology. All optimization algorithms, pruning techniques, and quantization methods are intellectual property of Avomo Innovations LLC.*
+
 
 
