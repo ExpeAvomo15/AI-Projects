@@ -203,7 +203,7 @@ export ONNX_OPSET="14"                    # ONNX opset version
 **Expe Avomo** - AI Engineer & Entrepreneur
 
 ### Copyright
-© 2023 Avomo Innovations LLC. All rights reserved.
+© 2025 Avomo Innovations LLC. All rights reserved.
 
 ### Demo Version
 This is a **demonstration version** of TurbineAI Engine, showcasing real pruning and quantization techniques. For production use or extended capabilities, please contact the development team.
@@ -252,6 +252,7 @@ This demo version is continuously improved based on user feedback. For suggestio
 *Optimization completed with real parameter reduction and precise metrics*  
 
 **Author**: Expe Avomo - AI Engineer & Entrepreneur  
-**Copyright**: © 2023 Avomo Innovations LLC. All rights reserved.
+**Copyright**: © 2025 Avomo Innovations LLC. All rights reserved.
 
 *This demo version is proprietary technology. All optimization algorithms, pruning techniques, and quantization methods are intellectual property of Avomo Innovations LLC.*
+
